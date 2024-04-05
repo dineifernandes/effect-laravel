@@ -1,0 +1,52 @@
+.drop-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#image-preview {
+    margin-top: 20px;
+}
+
+#image-preview img {
+    margin: 5px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.remove-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+
+.image-container {
+    position: relative;
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.preview-image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+

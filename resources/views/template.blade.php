@@ -518,8 +518,8 @@
 <div class="menu">
     <div class="menu-header">
         <a href="./dashboard.html" class="menu-header-logo">
-            <img src="{{ asset('./logo.svg') }}" alt="logo">
-            <span>CakeAdmin</span>
+
+            <span class="p-3">effect.rocks</span>
         </a>
         <a href="#" class="btn btn-sm menu-close-btn">
             <i class="bi bi-x"></i>
@@ -533,7 +533,7 @@
                          class="rounded-circle" alt="image">
                 </div>
                 <div>
-                    <div class="fw-bold">Timotheus Bendan</div>
+                    <div class="fw-bold">Claudinei A. Fernandes</div>
                     <small class="text-muted">Admin</small>
                 </div>
             </a>
@@ -556,19 +556,54 @@
         <ul>
             <li class="menu-divider">Dashboard</li>
             <li>
-                <a  class="active"  href="./dashboard.html">
+                <a  class="{{ Route::is('home') ? 'active' : '' }}"  href="{{route('home')}}">
                     <span class="nav-link-icon">
-                        <i class="bi bi-bar-chart"></i>
+                        <i class="bi bi-house"></i>
                     </span>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li>
+                <a href="#" class="{{ Route::is(
+                                                'finishing.*',
+                                                'inches.*',
+                                                'category.*',
+                                                'measuregroup.*',
+                                                'acessorymaterial.*',
+                                                'sku.*',
+                                                'tag.*',
+                                                'company.*',
+                                                'feedstock.*',
+                                                'environment.*',
+                                                'product.*'
+                                                ) ? 'active' : '' }}">
+                    <span class="nav-link-icon">
+                        <i class="bi bi-folder-plus"></i>
+                    </span>
+                    <span>Cadastros</span>
+                </a>
+                <ul >
+
+                    <li><a href="{{route('environment.index') }}" class="{{Route::is('environment.*') ? 'submenu_ative' : ''}}" ><i class="bi bi bi-layout-wtf zoom-icon"></i>&nbsp;Ambiente</a></li>
+                    <li><a href="{{route('finishing.index') }}" class="{{Route::is('finishing.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-bag zoom-icon"></i>&nbsp;Acabamento</a></li>
+                    <li><a href="{{route('inches.index')}}" class="{{Route::is('inches.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-rulers zoom-icon"></i>&nbsp;Polegadas</a></li>
+                    <li><a href="{{route('category.index')}}" class="{{Route::is('category.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-ui-radios-grid zoom-icon"></i>&nbsp;Categoria</a></li>
+                    <li><a href="{{route('measuregroup.index')}}" class="{{Route::is('measuregroup.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-file-ruled zoom-icon"></i>&nbsp;Grupo Medida</a></li>
+                    <li><a href="{{route('acessorymaterial.index')}}" class="{{Route::is('acessorymaterial.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-box-seam zoom-icon"></i>&nbsp;Material</a></li>
+                    <li><a href="{{route('feedstock.index')}}" class="{{Route::is('feedstock.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-box-arrow-in-down zoom-icon"></i>&nbsp;Matéria Prima</a></li>
+                    <li><a href="{{route('sku.index')}}" class="{{Route::is('sku.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-paint-bucket zoom-icon"></i>&nbsp;Cor Sku</a></li>
+                    <li><a href="{{route('field.index')}}" class="{{Route::is('field.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-ui-checks zoom-icon"></i>&nbsp;Inputs</a></li>
+                    <li><a href="{{route('tag.index')}}" class="{{Route::is('tag.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-tags zoom-icon"></i>&nbsp;Etiqueta</a></li>
+                    <li><a href="{{route('company.index')}}" class="{{Route::is('company.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-buildings zoom-icon"></i>&nbsp;Empresa</a></li>
+                    <li><a href="{{route('product.index')}}" class="{{Route::is('product.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-basket"></i>&nbsp;Produto</a></li>
+                </ul>
+            </li>
+            <li>
                 <a href="#">
                     <span class="nav-link-icon">
-                        <i class="bi bi-receipt"></i>
+                        <i class="bi bi-send"></i>
                     </span>
-                    <span>Orders</span>
+                    <span>Concorrentes</span>
                 </a>
                 <ul>
                     <li>
@@ -582,9 +617,9 @@
             <li>
                 <a href="#">
                     <span class="nav-link-icon">
-                        <i class="bi bi-truck"></i>
+                        <i class="bi bi-bar-chart"></i>
                     </span>
-                    <span>Products</span>
+                    <span>Relatórios</span>
                 </a>
                 <ul>
                     <li>
@@ -607,9 +642,9 @@
             <li>
                 <a href="#">
                     <span class="nav-link-icon">
-                        <i class="bi bi-wallet2"></i>
+                        <i class="bi bi-crosshair"></i>
                     </span>
-                    <span>Buyer</span>
+                    <span>Comparativo</span>
                 </a>
                 <ul>
                     <li>
@@ -629,27 +664,31 @@
             <li>
                 <a  href="./customers.html">
                     <span class="nav-link-icon">
-                        <i class="bi bi-person-badge"></i>
+                        <i class="bi bi-newspaper"></i>
                     </span>
-                    <span>Customers</span>
+                    <span>Noticias</span>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="#"  class="{{ Route::is('user.*') ? 'active' : '' }}">
                     <span class="nav-link-icon">
-                        <i class="bi bi-receipt"></i>
+                        <i class="bi bi-lock"></i>
                     </span>
-                    <span>Invoices</span>
+                    <span>Administrativo</span>
                 </a>
                 <ul>
                     <li>
-                        <a href="./invoices.html" >List</a>
+                        <a href="{{ route('user.index')  }}" class="{{Route::is('user.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-person-badge zoom-icon"></i>&nbsp;Usuários</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('usertype.index')  }}" class="{{Route::is('user.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-person-square zoom-icon"></i>&nbsp;Tipos de Usuários</a>
                     </li>
                     <li>
                         <a href="./invoice-detail.html" >Detail</a>
                     </li>
                 </ul>
             </li>
+
             <li class="menu-divider">Apps</li>
             <li>
                 <a  href="./chats.html">
@@ -682,18 +721,7 @@
         </a>
         <!-- ./ Logo -->
         <div class="page-title">@yield('page-name')</div>
-        <form class="search-form">
-            <div class="input-group">
-                <button class="btn btn-outline-light" type="button" id="button-addon1">
-                    <i class="bi bi-search"></i>
-                </button>
-                <input type="text" class="form-control" placeholder="Search..."
-                       aria-label="Example text with button addon" aria-describedby="button-addon1">
-                <a href="#" class="btn btn-outline-light close-header-search-bar">
-                    <i class="bi bi-x"></i>
-                </a>
-            </div>
-        </form>
+
         <div class="header-bar ms-auto">
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item">
@@ -701,81 +729,10 @@
                         <i class="bi bi-bell icon-lg"></i>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link nav-link-notify" data-count="3" data-bs-toggle="dropdown">
-                        <i class="bi bi-cart2 icon-lg"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0">
-                        <h6 class="m-0 px-4 py-3 border-bottom">Shopping Cart</h6>
-                        <div class="dropdown-menu-body">
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex align-items-center">
-                                    <a href="#" class="text-danger me-3" title="Remove">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <a href="#" class="me-3 flex-shrink-0 ">
-                                        <img src="{{asset('images/products/3.jpg')}}" class="rounded" width="60"
-                                             alt="...">
-                                    </a>
-                                    <div>
-                                        <h6>Digital clock</h6>
-                                        <div>1 x $1.190,90</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex align-items-center">
-                                    <a href="#" class="text-danger me-3" title="Remove">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <a href="#" class="me-3 flex-shrink-0 ">
-                                        <img src="{{asset('images/products/4.jpg')}}" class="rounded" width="60"
-                                             alt="...">
-                                    </a>
-                                    <div>
-                                        <h6>Toy Car</h6>
-                                        <div>1 x $139.58</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex align-items-center">
-                                    <a href="#" class="text-danger me-3" title="Remove">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <a href="#" class="me-3 flex-shrink-0 ">
-                                        <img src="{{asset('images/products/5.jpg')}}" class="rounded" width="60"
-                                             alt="...">
-                                    </a>
-                                    <div>
-                                        <h6>Sunglasses</h6>
-                                        <div>2 x $50,90</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex align-items-center">
-                                    <a href="#" class="text-danger me-3" title="Remove">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <a href="#" class="me-3 flex-shrink-0 ">
-                                        <img src="{{asset('images/products/6.jpg')}}" class="rounded" width="60"
-                                             alt="...">
-                                    </a>
-                                    <div>
-                                        <h6>Cake</h6>
-                                        <div>1 x $10,50</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h6 class="m-0 px-4 py-3 border-top small">Sub Total : <strong
-                                class="text-primary">$1.442,78</strong></h6>
-                    </div>
-                </li>
+
                 <li class="nav-item ms-3">
                     <button class="btn btn-primary btn-icon">
-                        <i class="bi bi-plus-circle"></i> Create Report
+                        <i class="bi bi-telegram"></i> Site
                     </button>
                 </li>
             </ul>
