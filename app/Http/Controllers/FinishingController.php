@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcabamentosModel;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 
 class FinishingController extends Controller
 {
@@ -11,8 +15,22 @@ class FinishingController extends Controller
      */
     public function index()
     {
-        //
-        return view('finishing.list');
+
+        request()->validate([
+            'sortDir' => ['nullable', 'in:asc,desc'],
+            'sort' => ['nullable', 'in:id,nome,data_cadastro,data_update,status'],
+        ]);
+
+        $acabamentos = AcabamentosModel::query()
+            ->when(request()->search, fn($q) => $q->where('nome', 'LIKE' , "%".request()->search."%"))
+            ->when(request()->sort, fn($q) => $q->orderBy(request()->sort, request()->sortDir))
+            ->paginate(15);
+        return Inertia::render('finishing/List', [
+            'acabamentos' => $acabamentos,
+            'search' => request()->search,
+            'sort' => request()->sort ?? 'id',
+            'sortDir' => request()->sortDir ?? 'asc'
+        ]);
     }
 
     /**
@@ -21,7 +39,7 @@ class FinishingController extends Controller
     public function create()
     {
         //
-        return view('finishing.add');
+        return Inertia::render('finishing/Create');
     }
 
     /**
@@ -29,7 +47,43 @@ class FinishingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $rules = [
+            'nome' => 'required|string|max:255',
+            'status' => 'required|in:0,1',
+        ];
+
+        $messages = [
+            'nome.required' => 'O campo nome é obrigatório.',
+            'nome.string' => 'O campo nome deve ser uma string.',
+            'nome.max' => 'O campo nome não pode ter mais de 255 caracteres.',
+            'status.required' => 'O campo status é obrigatório.',
+            'status.in' => 'O campo status deve ser "ativo" ou "inativo".',
+        ];
+//
+//        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Definir as regras de validação
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Verificar se a validação falhou
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $nome = $request->input('nome');
+        $status = $request->input('status');
+
+        $acabamento = new AcabamentosModel();
+        $acabamento->nome = $nome;
+        $acabamento->status = $status;
+        $retorno = $acabamento->save();
+
+        if($retorno){
+            return redirect()->route('finishing.create')->with('success', 'Operação realizada com sucesso!');
+        }
+
+        return redirect()->route('finishing.create')->with('error', 'Falha ao realizar a operação!');
     }
 
     /**
@@ -45,7 +99,8 @@ class FinishingController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $acabamento = AcabamentosModel::find($id);
+        return Inertia::render('finishing/Edit', compact('acabamento'));
     }
 
     /**
@@ -53,7 +108,46 @@ class FinishingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $rules = [
+            'id' => 'required',
+            'nome' => 'required|string|max:255',
+            'status' => 'required|in:0,1',
+        ];
+
+        $messages = [
+            'id.required' => 'O campo id é obrigatório.',
+            'nome.required' => 'O campo nome é obrigatório.',
+            'nome.string' => 'O campo nome deve ser uma string.',
+            'nome.max' => 'O campo nome não pode ter mais de 255 caracteres.',
+            'status.required' => 'O campo status é obrigatório.',
+            'status.in' => 'O campo status deve ser "ativo" ou "inativo".',
+        ];
+//
+//        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Definir as regras de validação
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Verificar se a validação falhou
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+
+        $id = $request->input('id');
+        $nome = $request->input('nome');
+        $status = $request->input('status');
+
+        $acabamento = AcabamentosModel::find($id);
+        $acabamento->nome = $nome;
+        $acabamento->status = $status;
+        $retorno = $acabamento->save();
+
+        if($retorno){
+            return redirect()->route('finishing.index')->with('success', 'Operação realizada com sucesso!');
+        }
+
+        return redirect()->route('finishing.index')->with('error', 'Falha ao realizar a operação!');
     }
 
     /**
@@ -61,6 +155,11 @@ class FinishingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $acabamento = AcabamentosModel::find($id);
+        $retorno = $acabamento->delete();
+        if($retorno){
+            return redirect()->route('finishing.index')->with('success', 'Operação realizada com sucesso!');
+        }
+        return redirect()->route('finishing.index')->with('error', 'Falha ao realizar a operação!');
     }
 }
