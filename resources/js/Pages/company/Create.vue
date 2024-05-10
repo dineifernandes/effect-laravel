@@ -138,7 +138,7 @@ export default defineComponent({
         errors: Object,
         title:{
             type: String,
-            default: 'Ambiente'
+            default: 'Empresa'
         }
     },
     components: {
@@ -203,7 +203,7 @@ export default defineComponent({
             if(!form['razao_social'] || form['razao_social'].trim() === ''){
                 erros += "O campo razao_social é obrigatório!<br>";
             }
-            if(!form['logo'] || form['logo'].trim() === ''){
+            if(!form['logo']){
                 erros += "O campo logo é obrigatório!<br>";
             }
             if(!form['slogan'] || form['slogan'].trim() === ''){
