@@ -1,4 +1,5 @@
 <template>
+    <Head :title="$props.title" />
     <AppLayout title="Atributos">
         <div class="card">
             <div class="card-body">
@@ -10,7 +11,7 @@
 
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Procurar">
+                                        <input type="text" class="form-control" placeholder="Procurar" v-model="term" :onkeyup="applySearch">
                                         <button class="btn btn-outline-light" type="button">
                                             <i class="bi bi-search"></i>
                                         </button>
@@ -20,9 +21,9 @@
                         </form>
                     </div>
                     <div class="dropdown ms-auto">
-                        <a :href="route('finishing.create')" class="btn primary btn-icon">
+                        <Link :href="route('attributes.create')" class="btn btn-primary btn-icon">
                             <i class="bi bi-plus-circle"></i> Novo
-                        </a>
+                        </Link>
                         <a href="#" data-bs-toggle="dropdown"
                            class="btn btn-link dropdown-toggle"
                            aria-haspopup="true" aria-expanded="false">Ação</a>
@@ -44,29 +45,69 @@
                         <input class="form-check-input select-all" type="checkbox" data-select-all-target="#users"
                                id="defaultCheck1">
                     </th>
-                    <th>Id</th>
-                    <th>Nome</th>
-                    <th>Vantagem</th>
-                    <th>Nota</th>
-                    <th>Cadastro</th>
-                    <th>Update</th>
-                    <th>Status</th>
+                    <th @click="sortBy('id')">
+                        Id
+                    <span v-if="props.sort == 'id'">
+                        <span v-if="props.sortDir == 'asc'"><i class="bi bi-arrow-down"></i></span>
+                        <span v-if="props.sortDir == 'desc'"><i class="bi bi-arrow-up"></i></span>
+                    </span>
+                    </th>
+                    <th @click="sortBy('nome')">Nome
+                        <span v-if="props.sort == 'nome'">
+                        <span v-if="props.sortDir == 'asc'"><i class="bi bi-arrow-down"></i></span>
+                        <span v-if="props.sortDir == 'desc'"><i class="bi bi-arrow-up"></i></span>
+                    </span>
+                    </th>
+                    <th @click="sortBy('vantagem')">Vantagem
+                        <span v-if="props.sort == 'vantagem'">
+                        <span v-if="props.sortDir == 'asc'"><i class="bi bi-arrow-down"></i></span>
+                        <span v-if="props.sortDir == 'desc'"><i class="bi bi-arrow-up"></i></span>
+                    </span>
+                    </th>
+                    <th @click="sortBy('nota')">Nota
+                        <span v-if="props.sort == 'nota'">
+                        <span v-if="props.sortDir == 'asc'"><i class="bi bi-arrow-down"></i></span>
+                        <span v-if="props.sortDir == 'desc'"><i class="bi bi-arrow-up"></i></span>
+                    </span>
+                    </th>
+                    <th @click="sortBy('data_cadastro')">Cadastro
+                        <span v-if="props.sort == 'data_cadastro'">
+                        <span v-if="props.sortDir == 'asc'"><i class="bi bi-arrow-down"></i></span>
+                        <span v-if="props.sortDir == 'desc'"><i class="bi bi-arrow-up"></i></span>
+                    </span>
+                    </th>
+                    <th @click="sortBy('data_update')">Update
+                        <span v-if="props.sort == 'data_update'">
+                        <span v-if="props.sortDir == 'asc'"><i class="bi bi-arrow-down"></i></span>
+                        <span v-if="props.sortDir == 'desc'"><i class="bi bi-arrow-up"></i></span>
+                    </span>
+                    </th>
+                    <th @click="sortBy('status')">Status
+                        <span v-if="props.sort == 'status'">
+                        <span v-if="props.sortDir == 'asc'"><i class="bi bi-arrow-down"></i></span>
+                        <span v-if="props.sortDir == 'desc'"><i class="bi bi-arrow-up"></i></span>
+                    </span>
+                    </th>
                     <th class="text-center">#</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+
+
+                <tr v-for="atributo in atributos.data" :key="atributo.id">
                     <td>
                         <input class="form-check-input" type="checkbox">
                     </td>
-                    <td>1</td>
-                    <td><a href="#">Acabamento 01</a></td>
-                    <td>Vantagem 01</td>
-                    <td>5.6</td>
-                    <td>10/10/2024 07:02:00</td>
-                    <td>12/10/2024 10:32:00</td>
+                    <td>{{ atributo.id }}</td>
+                    <td><Link :href="route('attributes.edit', atributo.id)" >{{ atributo.nome }}</Link></td>
+                    <td>{{ atributo.vantagem }}</td>
+                    <td>{{ atributo.nota }}</td>
+                    <td>{{ formatarData(atributo.data_cadastro) }}</td>
+                    <td>{{ formatarData(atributo.data_update) }}</td>
                     <td>
-                        <span class="badge bg-danger">Inativo</span>
+                        <span v-if="atributo.status == 1" class="badge bg-success">Ativo</span>
+                        <span v-else class="badge bg-danger">Inativo</span>
+
                     </td>
                     <td class="text-end">
                         <div class="dropdown">
@@ -76,41 +117,13 @@
                                 <i class="bi bi-three-dots"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#" class="dropdown-item">View Profile</a>
-                                <a href="#" class="dropdown-item">Edit</a>
-                                <a href="#" class="dropdown-item text-danger">Delete</a>
+                                <Link :href="route('attributes.edit', atributo.id)" class="dropdown-item"><i class="bi bi-pencil"></i> Editar</Link>
+                                <button @click="destroy(atributo.id)" class="dropdown-item text-danger"><i class="bi bi-trash"></i> Remover</button>
                             </div>
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <input class="form-check-input" type="checkbox">
-                    </td>
-                    <td>2</td>
-                    <td><a href="#">Acabamento 02</a></td>
-                    <td>Vantagem 02</td>
-                    <td>5.6</td>
-                    <td>10/10/2024 07:02:00</td>
-                    <td>12/10/2024 10:32:00</td>
-                    <td>
-                        <span class="badge bg-success">Ativo</span>
-                    </td>
-                    <td class="text-end">
-                        <div class="dropdown">
-                            <a href="#" data-bs-toggle="dropdown"
-                               class="btn btn-floating"
-                               aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-three-dots"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#" class="dropdown-item">View Profile</a>
-                                <a href="#" class="dropdown-item">Edit</a>
-                                <a href="#" class="dropdown-item text-danger">Delete</a>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+
                 </tbody>
             </table>
         </div>
@@ -118,16 +131,26 @@
 
         <nav class="mt-4" aria-label="Page navigation example">
             <ul class="pagination justify-content-end">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                <!-- Botão "Previous" -->
+                <li class="page-item" :class="{ disabled: !atributos.prev_page_url }">
+                    <a class="page-link" @click.prevent="prevPage" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
+
+                <!-- Iterar pelas páginas -->
+                <template v-if="atributos.last_page > 1">
+                    <!-- Calcular o conjunto limitado de páginas exibidas -->
+                    <template v-for="page in limitedPages" :key="page">
+                        <li class="page-item" :class="{ active: page === atributos.current_page }">
+                            <a class="page-link" @click.prevent="updateTable(page)" href="#">{{ page }}</a>
+                        </li>
+                    </template>
+                </template>
+
+                <!-- Botão "Next" -->
+                <li class="page-item" :class="{ disabled: !atributos.next_page_url }">
+                    <a class="page-link" @click.prevent="nextPage" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
@@ -136,14 +159,116 @@
     </AppLayout>
 </template>
 
-<script>
+<script setup>
 import AppLayout from "../AppLayout.vue";
-import {defineComponent} from "vue";
+import {defineComponent, ref, computed} from "vue";
+import { format } from 'date-fns';
+import {Head,Link, router} from "@inertiajs/vue3";
+import { Inertia } from '@inertiajs/inertia';
 
-export default{
-    components:{
-        AppLayout
+const props = defineProps({
+    atributos: {
+        type: Object,
+        default: () => []
+    },
+    search:{
+        type: String,
+        default: ''
+    },
+    sort:{
+        type: String,
+        default: () => 'id'
+    },
+    sortDir:{
+        type: String,
+        default: () => 'asc'
+    },
+    title:{
+        type: String,
+        default: 'Atributos'
     }
+});
+
+defineComponent({
+    AppLayout,
+    Link,
+});
+
+let term = ref(props.search);
+let sort = ref(props.sort);
+let sortDir = ref(props.sortDir);
+
+
+
+
+
+
+function sortBy(field){
+    sort.value = field;
+    sortDir.value = props.sortDir == 'asc' ? 'desc' : 'asc';;
+
+    updateTable();
+
+}
+
+function formatarData(data) {
+    return data ? format(new Date(data), 'dd/MM/yyyy HH:mm:ss') : '';
+}
+
+function applySearch(event){
+
+    term.value = event.target.value;
+    updateTable();
+}
+
+function updateTable(page = 1){
+
+    let query = `?page=${page}`;
+
+    if(term.value){
+        query += `&search=${term.value}`;
+    }
+
+    if(sort.value){
+        query += `&sort=${sort.value}&sortDir=${sortDir.value}`;
+    }
+
+    router.visit(`/attributes/list?${query}`,{preserveState: true, replace: true, preserveScroll: true})
+}
+
+// Calcula as páginas a serem exibidas, limitando a um conjunto específico
+const limitedPages = computed(() => {
+    const currentPage = props.atributos.current_page;
+    const lastPage = props.atributos.last_page;
+    const limit = 3; // Quantidade de números a serem exibidos antes e depois da página atual
+
+    let start = currentPage - limit;
+    let end = currentPage + limit;
+
+    if (start < 1) {
+        start = 1;
+        end = Math.min(lastPage, start + limit * 2);
+    }
+
+    if (end > lastPage) {
+        end = lastPage;
+        start = Math.max(1, end - limit * 2);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+});
+
+function destroy(id){
+    try{
+        if(confirm('Tem certeza que deseja remover o registro?')){
+            Inertia.delete(route('attributes.delete', id));
+            Toast.fire("","Operação realizada com sucesso!","success");
+        }
+
+    }catch(err){
+        Toast.fire("",err,"error");
+    }
+
 }
 
 

@@ -1,9 +1,9 @@
 <template>
     <Head :title="$props.title" />
-    <AppLayout title="Acabamento">
+    <AppLayout title="Grupo de Medida">
         <div class="card">
             <div class="card-body">
-                <h6 class="card-title mb-4">Editar Acabamento</h6>
+                <h6 class="card-title mb-4">Editar Grupo de Medida</h6>
 
                 <!-- Exibir mensagem de sucesso -->
 
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="d-flex flex-fill justify-content-end">
-                        <Link :href="route('finishing.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
+                        <Link :href="route('measuregroup.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
                             <i class="bi bi-arrow-left me-0"></i>  Voltar
                         </Link>
 
@@ -59,11 +59,11 @@ import Notification from "@/Components/Notification.vue";
 
 export default defineComponent({
     props:{
-        acabamento: Object,
+        grupo: Object,
         errors: Object,
-        title:{
+        title: {
             type: String,
-            default: 'Acabamento'
+            default: 'Grupo de Medida'
         }
     },
     components: {
@@ -74,7 +74,7 @@ export default defineComponent({
     },
     data(props) {
 
-        const form = useForm(props.acabamento)
+        const form = useForm(props.grupo)
 
         return {
             form
@@ -89,7 +89,7 @@ export default defineComponent({
             if (isValid) {
 
                 try{
-                    const response = await this.form.put(route('finishing.update', this.form.id));
+                    const response = await this.form.put(route('measuregroup.update', this.form.id));
 
                     Toast.fire("","Operação realizada com sucesso!","success");
 

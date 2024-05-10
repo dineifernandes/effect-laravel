@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AmbientesModel;
+use App\Models\EnvironmentModel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +21,7 @@ class EnvironmentController extends Controller
             'sort' => ['nullable', 'in:id,nome,data_cadastro,data_update,status'],
         ]);
 
-        $ambientes = AmbientesModel::query()
+        $ambientes = EnvironmentModel::query()
             ->when(request()->search, fn($q) => $q->where('nome', 'LIKE' , "%".request()->search."%"))
             ->when(request()->sort, fn($q) => $q->orderBy(request()->sort, request()->sortDir))
             ->paginate(15);
@@ -74,7 +74,7 @@ class EnvironmentController extends Controller
         $nome = $request->input('nome');
         $status = $request->input('status');
 
-        $ambiente = new AmbientesModel();
+        $ambiente = new EnvironmentModel();
         $ambiente->nome = $nome;
         $ambiente->status = $status;
         $retorno = $ambiente->save();
@@ -99,7 +99,7 @@ class EnvironmentController extends Controller
      */
     public function edit(string $id)
     {
-        $ambiente = AmbientesModel::find($id);
+        $ambiente = EnvironmentModel::find($id);
         return Inertia::render('environment/Edit', compact('ambiente'));
     }
 
@@ -138,7 +138,7 @@ class EnvironmentController extends Controller
         $nome = $request->input('nome');
         $status = $request->input('status');
 
-        $ambiente = AmbientesModel::find($id);
+        $ambiente = EnvironmentModel::find($id);
         $ambiente->nome = $nome;
         $ambiente->status = $status;
         $retorno = $ambiente->save();
@@ -155,7 +155,7 @@ class EnvironmentController extends Controller
      */
     public function destroy(string $id)
     {
-        $ambiente = AmbientesModel::find($id);
+        $ambiente = EnvironmentModel::find($id);
         $retorno = $ambiente->delete();
         if($retorno){
             return redirect()->route('environment.index')->with('success', 'Operação realizada com sucesso!');

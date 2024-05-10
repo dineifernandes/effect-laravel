@@ -1,9 +1,9 @@
 <template>
     <Head :title="$props.title" />
-    <AppLayout title="Acabamento">
+    <AppLayout title="Categoria">
         <div class="card">
             <div class="card-body">
-                <h6 class="card-title mb-4">Editar Acabamento</h6>
+                <h6 class="card-title mb-4">Preencha os campos abaixo:</h6>
 
                 <!-- Exibir mensagem de sucesso -->
 
@@ -16,6 +16,17 @@
                         <!-- Exibir erro -->
                         <div v-if="errors.nome" class="">{{ errors.nome }}</div>
                     </div>
+
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Ambiente</label>
+                        <select v-model="form.ambiente_id" class="form-control" id="ambiente_id" name="ambiente_id">
+                            <option v-for="ambiente in ambientes" :key="ambiente.id" :value="ambiente.id">{{ ambiente.nome }}</option>
+                        </select>
+                        <!-- Exibir erro -->
+                        <div v-if="errors.ambiente_id" class="">{{ errors.ambiente_id }}</div>
+                    </div>
+
 
                     <!-- Campo Status -->
                     <div class="col-md-12 mb-3">
@@ -35,11 +46,11 @@
                     </div>
 
                     <div class="d-flex flex-fill justify-content-end">
-                        <Link :href="route('finishing.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
+                        <Link :href="route('category.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
                             <i class="bi bi-arrow-left me-0"></i>  Voltar
                         </Link>
 
-                        <button class="btn btn-primary me-2" type="submit"><i class="bi bi-pencil"></i> Alterar</button>
+                        <button class="btn btn-primary me-2" type="submit"><i class="bi bi-plus"></i> Salvar</button>
                     </div>
 
                 </form>
@@ -59,11 +70,11 @@ import Notification from "@/Components/Notification.vue";
 
 export default defineComponent({
     props:{
-        acabamento: Object,
         errors: Object,
+        ambientes: Object,
         title:{
             type: String,
-            default: 'Acabamento'
+            default: 'Categoria'
         }
     },
     components: {
@@ -72,9 +83,13 @@ export default defineComponent({
         Link,
         Notification
     },
-    data(props) {
+    data() {
 
-        const form = useForm(props.acabamento)
+        const form = useForm({
+            nome: '',
+            status: '1',
+            ambiente_id: null,
+        })
 
         return {
             form
@@ -89,14 +104,14 @@ export default defineComponent({
             if (isValid) {
 
                 try{
-                    const response = await this.form.put(route('finishing.update', this.form.id));
+                    const response = await this.form.post(route('category.store'));
 
                     Toast.fire("","Operação realizada com sucesso!","success");
 
                     this.form.reset();
 
                 }catch(err){
-                    Toast.fire("","Falha ao realizar a operação!"+err,"error");
+                    Toast.fire("","Falha ao realizar a operação!","error");
                 }
 
 
@@ -106,7 +121,20 @@ export default defineComponent({
             }
         },
         validateForm(form) {
-          return !(!form.id || form.nome === '' || form.status === '');
+
+            if(form['nome'].trim() === ''){
+                return false;
+            }
+
+            if(!form['status'] || form['status'].trim() === ''){
+                return false;
+            }
+
+            if(!form['ambiente_id'] || form['ambiente_id'] === null){
+                return false;
+            }
+
+            return true;
         }
     }
 });

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeedStockModel;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 
 class FeedStockController extends Controller
 {
@@ -11,8 +15,22 @@ class FeedStockController extends Controller
      */
     public function index()
     {
-        //
-        return view('feedstock.list');
+
+        request()->validate([
+            'sortDir' => ['nullable', 'in:asc,desc'],
+            'sort' => ['nullable', 'in:id,nome,data_cadastro,data_update,status'],
+        ]);
+
+        $materias = FeedStockModel::query()
+            ->when(request()->search, fn($q) => $q->where('nome', 'LIKE' , "%".request()->search."%"))
+            ->when(request()->sort, fn($q) => $q->orderBy(request()->sort, request()->sortDir))
+            ->paginate(15);
+        return Inertia::render('feedstock/List', [
+            'materias' => $materias,
+            'search' => request()->search,
+            'sort' => request()->sort ?? 'id',
+            'sortDir' => request()->sortDir ?? 'asc'
+        ]);
     }
 
     /**
@@ -21,7 +39,7 @@ class FeedStockController extends Controller
     public function create()
     {
         //
-        return view('feedstock.add');
+        return Inertia::render('feedstock/Create');
     }
 
     /**
@@ -29,7 +47,43 @@ class FeedStockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $rules = [
+            'nome' => 'required|string|max:255',
+            'status' => 'required|in:0,1',
+        ];
+
+        $messages = [
+            'nome.required' => 'O campo nome é obrigatório.',
+            'nome.string' => 'O campo nome deve ser uma string.',
+            'nome.max' => 'O campo nome não pode ter mais de 255 caracteres.',
+            'status.required' => 'O campo status é obrigatório.',
+            'status.in' => 'O campo status deve ser "ativo" ou "inativo".',
+        ];
+//
+//        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Definir as regras de validação
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Verificar se a validação falhou
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $nome = $request->input('nome');
+        $status = $request->input('status');
+
+        $materia = new FeedStockModel();
+        $materia->nome = $nome;
+        $materia->status = $status;
+        $retorno = $materia->save();
+
+        if($retorno){
+            return redirect()->route('feedstock.create')->with('success', 'Operação realizada com sucesso!');
+        }
+
+        return redirect()->route('feedstock.create')->with('error', 'Falha ao realizar a operação!');
     }
 
     /**
@@ -45,7 +99,8 @@ class FeedStockController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $materia = FeedStockModel::find($id);
+        return Inertia::render('feedstock/Edit', compact('materia'));
     }
 
     /**
@@ -53,7 +108,46 @@ class FeedStockController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $rules = [
+            'id' => 'required',
+            'nome' => 'required|string|max:255',
+            'status' => 'required|in:0,1',
+        ];
+
+        $messages = [
+            'id.required' => 'O campo id é obrigatório.',
+            'nome.required' => 'O campo nome é obrigatório.',
+            'nome.string' => 'O campo nome deve ser uma string.',
+            'nome.max' => 'O campo nome não pode ter mais de 255 caracteres.',
+            'status.required' => 'O campo status é obrigatório.',
+            'status.in' => 'O campo status deve ser "ativo" ou "inativo".',
+        ];
+//
+//        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Definir as regras de validação
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Verificar se a validação falhou
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+
+        $id = $request->input('id');
+        $nome = $request->input('nome');
+        $status = $request->input('status');
+
+        $materia = FeedStockModel::find($id);
+        $materia->nome = $nome;
+        $materia->status = $status;
+        $retorno = $materia->save();
+
+        if($retorno){
+            return redirect()->route('feedstock.index')->with('success', 'Operação realizada com sucesso!');
+        }
+
+        return redirect()->route('feedstock.index')->with('error', 'Falha ao realizar a operação!');
     }
 
     /**
@@ -61,6 +155,11 @@ class FeedStockController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $materia = FeedStockModel::find($id);
+        $retorno = $materia->delete();
+        if($retorno){
+            return redirect()->route('feedstock.index')->with('success', 'Operação realizada com sucesso!');
+        }
+        return redirect()->route('feedstock.index')->with('error', 'Falha ao realizar a operação!');
     }
 }

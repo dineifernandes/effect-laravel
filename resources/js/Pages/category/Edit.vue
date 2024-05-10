@@ -1,9 +1,9 @@
 <template>
     <Head :title="$props.title" />
-    <AppLayout title="Acabamento">
+    <AppLayout title="Categoria">
         <div class="card">
             <div class="card-body">
-                <h6 class="card-title mb-4">Editar Acabamento</h6>
+                <h6 class="card-title mb-4">Editar Categoria</h6>
 
                 <!-- Exibir mensagem de sucesso -->
 
@@ -15,6 +15,15 @@
                         <input v-model="form.nome" type="text" class="form-control" id="nome" name="nome">
                         <!-- Exibir erro -->
                         <div v-if="errors.nome" class="">{{ errors.nome }}</div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Ambiente</label>
+                        <select v-model="form.ambiente_id" class="form-control" id="ambiente_id" name="ambiente_id">
+                            <option v-for="ambiente in ambientes" :key="ambiente.id" :value="ambiente.id">{{ ambiente.nome }}</option>
+                        </select>
+                        <!-- Exibir erro -->
+                        <div v-if="errors.ambiente_id" class="">{{ errors.ambiente_id }}</div>
                     </div>
 
                     <!-- Campo Status -->
@@ -35,7 +44,7 @@
                     </div>
 
                     <div class="d-flex flex-fill justify-content-end">
-                        <Link :href="route('finishing.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
+                        <Link :href="route('category.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
                             <i class="bi bi-arrow-left me-0"></i>  Voltar
                         </Link>
 
@@ -59,11 +68,12 @@ import Notification from "@/Components/Notification.vue";
 
 export default defineComponent({
     props:{
-        acabamento: Object,
+        categoria: Object,
         errors: Object,
+        ambientes: Object,
         title:{
             type: String,
-            default: 'Acabamento'
+            default: 'Categoria'
         }
     },
     components: {
@@ -74,7 +84,7 @@ export default defineComponent({
     },
     data(props) {
 
-        const form = useForm(props.acabamento)
+        const form = useForm(props.categoria)
 
         return {
             form
@@ -89,7 +99,7 @@ export default defineComponent({
             if (isValid) {
 
                 try{
-                    const response = await this.form.put(route('finishing.update', this.form.id));
+                    const response = await this.form.put(route('category.update', this.form.id));
 
                     Toast.fire("","Operação realizada com sucesso!","success");
 

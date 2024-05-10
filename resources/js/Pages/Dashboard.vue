@@ -1,4 +1,5 @@
 <template>
+    <Head :title="$props.title" />
     <AppLayout title="Dashboard">
         <div class="card mb-4">
             <div class="card-body">
@@ -16,9 +17,17 @@
 <script>
 import AppLayout from "./AppLayout.vue";
 import {defineComponent} from "vue";
+import {Head} from "@inertiajs/vue3";
 
 export default{
+    props:{
+        title:{
+            type: String,
+            default: "Dashboard"
+        }
+    },
     components:{
+        Head,
         AppLayout
     }
 }

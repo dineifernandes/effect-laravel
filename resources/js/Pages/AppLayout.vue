@@ -543,38 +543,40 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="{{ Route::is(
-                                                'finishing.*',
-                                                'inches.*',
-                                                'category.*',
-                                                'measuregroup.*',
-                                                'acessorymaterial.*',
-                                                'sku.*',
-                                                'tag.*',
-                                                'company.*',
-                                                'feedstock.*',
-                                                'environment.*',
-                                                'product.*'
-                                                ) ? 'active' : '' }}">
+                        <a href="#">
                     <span class="nav-link-icon">
                         <i class="bi bi-folder-plus"></i>
                     </span>
                             <span>Cadastros</span>
                         </a>
-                        <ul >
-
-                            <li><Link :href="route('environment.index')" :class="{'active': $page.url === '/environment/list'}" ><i class="bi bi bi-layout-wtf zoom-icon"></i>&nbsp;Ambiente</Link></li>
-                            <li><Link :href="route('finishing.index')" class="{{Route::is('finishing.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-bag zoom-icon"></i>&nbsp;Acabamento</Link></li>
-                            <li><Link :href="route('inches.index')" class="{{Route::is('inches.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-rulers zoom-icon"></i>&nbsp;Polegadas</Link></li>
-                            <li><Link :href="route('category.index')" class="{{Route::is('category.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-ui-radios-grid zoom-icon"></i>&nbsp;Categoria</Link></li>
-                            <li><Link :href="route('measuregroup.index')" class="{{Route::is('measuregroup.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-file-ruled zoom-icon"></i>&nbsp;Grupo Medida</Link></li>
-                            <li><Link :href="route('acessorymaterial.index')" class="{{Route::is('acessorymaterial.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-box-seam zoom-icon"></i>&nbsp;Material</Link></li>
-                            <li><Link :href="route('feedstock.index')" class="{{Route::is('feedstock.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-box-arrow-in-down zoom-icon"></i>&nbsp;Matéria Prima</Link></li>
-                            <li><Link :href="route('sku.index')" class="{{Route::is('sku.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-paint-bucket zoom-icon"></i>&nbsp;Cor Sku</Link></li>
-                            <li><Link :href="route('field.index')" class="{{Route::is('field.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-ui-checks zoom-icon"></i>&nbsp;Inputs</Link></li>
-                            <li><Link :href="route('tag.index')" class="{{Route::is('tag.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-tags zoom-icon"></i>&nbsp;Etiqueta</Link></li>
-                            <li><Link :href="route('company.index')" class="{{Route::is('company.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-buildings zoom-icon"></i>&nbsp;Empresa</Link></li>
-                            <li><Link :href="route('product.index')" class="{{Route::is('product.*') ? 'submenu_ative' : ''}}" ><i class="bi bi-basket"></i>&nbsp;Produto</Link></li>
+                        <ul :style="{'display':
+                        $page.url.startsWith('/environment') ||
+                        $page.url.startsWith('/finishing') ||
+                        $page.url.startsWith('/inches') ||
+                        $page.url.startsWith('/category') ||
+                        $page.url.startsWith('/measuregroup') ||
+                        $page.url.startsWith('/acessorymaterial') ||
+                        $page.url.startsWith('/feedstock') ||
+                        $page.url.startsWith('/sku') ||
+                        $page.url.startsWith('/field') ||
+                        $page.url.startsWith('/tag') ||
+                        $page.url.startsWith('/company') ||
+                        $page.url.startsWith('/product') ||
+                        $page.url.startsWith('/attributes') ?
+                        'block' : 'none'}" >
+                            <li><Link :href="route('environment.index')" :class="{'submenu_ative': $page.url.startsWith('/environment')}" ><i class="bi bi bi-layout-wtf zoom-icon"></i>&nbsp;Ambiente</Link></li>
+                            <li><Link :href="route('finishing.index')" :class="{'submenu_ative': $page.url.startsWith('/finishing')}" ><i class="bi bi-bag zoom-icon"></i>&nbsp;Acabamento</Link></li>
+                            <li><Link :href="route('inches.index')" :class="{'submenu_ative': $page.url.startsWith('/inches')}" ><i class="bi bi-rulers zoom-icon"></i>&nbsp;Polegadas</Link></li>
+                            <li><Link :href="route('category.index')" :class="{'submenu_ative': $page.url.startsWith('/category')}" ><i class="bi bi-ui-radios-grid zoom-icon"></i>&nbsp;Categoria</Link></li>
+                            <li><Link :href="route('attributes.index')" :class="{'submenu_ative': $page.url.startsWith('/attributes')}" ><i class="bi bi-ui-radios-grid zoom-icon"></i>&nbsp;Atributos</Link></li>
+                            <li><Link :href="route('measuregroup.index')" :class="{'submenu_ative': $page.url.startsWith('/measuregroup')}" ><i class="bi bi-file-ruled zoom-icon"></i>&nbsp;Grupo Medida</Link></li>
+                            <li><Link :href="route('acessorymaterial.index')" :class="{'submenu_ative': $page.url.startsWith('/acessorymaterial')}" ><i class="bi bi-box-seam zoom-icon"></i>&nbsp;Material</Link></li>
+                            <li><Link :href="route('feedstock.index')" :class="{'submenu_ative': $page.url.startsWith('/feedstock')}" ><i class="bi bi-box-arrow-in-down zoom-icon"></i>&nbsp;Matéria Prima</Link></li>
+                            <li><Link :href="route('skucolor.index')" :class="{'submenu_ative': $page.url.startsWith('/sku')}" ><i class="bi bi-paint-bucket zoom-icon"></i>&nbsp;Cor Sku</Link></li>
+                            <li><Link :href="route('field.index')" :class="{'submenu_ative': $page.url.startsWith('/fiel')}" ><i class="bi bi-ui-checks zoom-icon"></i>&nbsp;Inputs</Link></li>
+                            <li><Link :href="route('tag.index')" :class="{'submenu_ative': $page.url.startsWith('/tag')}" ><i class="bi bi-tags zoom-icon"></i>&nbsp;Etiqueta</Link></li>
+                            <li><Link :href="route('company.index')" :class="{'submenu_ative': $page.url.startsWith('/tag')}" ><i class="bi bi-buildings zoom-icon"></i>&nbsp;Empresa</Link></li>
+                            <li><Link :href="route('product.index')" :class="{'submenu_ative': $page.url.startsWith('/product')}" ><i class="bi bi-basket"></i>&nbsp;Produto</Link></li>
                         </ul>
                     </li>
                     <li>
@@ -768,7 +770,10 @@ import {Link} from "@inertiajs/vue3";
 
 export default{
     props:{
-        title: String
+        title: {
+            type: String,
+            default: 'Titulo'
+        },
     },
     components:{
         Link

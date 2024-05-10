@@ -1,4 +1,5 @@
 <template>
+    <Head :title="$props.title" />
     <AppLayout title="Acabamentos">
         <div class="card">
             <div class="card-body">
@@ -167,6 +168,10 @@ const props = defineProps({
     sortDir:{
         type: String,
         default: () => 'asc'
+    },
+    title:{
+        type: String,
+        default: 'Acabamento'
     }
 });
 

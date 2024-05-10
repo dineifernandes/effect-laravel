@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class AmbientesModel
+ * Class FeedStockModel
  *
  * @property int $id
  * @property string nome
@@ -21,9 +21,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $data_update
  * @package App\Models
  */
-class AmbientesModel extends Model
+class FeedStockModel extends Model
 {
-    protected $table = 'ambientes';
+    protected $table = 'materiaprima';
     public $timestamps = false;
 
     protected $casts = [

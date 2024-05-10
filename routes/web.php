@@ -53,6 +53,13 @@ Route::middleware([
     Route::put('/category/update/{id}', [\App\Http\Controllers\CategoryController::class, 'update'])->name('category.update');
     Route::delete('/category/delete/{id}', [\App\Http\Controllers\CategoryController::class, 'destroy'])->name('category.delete');
 
+    Route::get('/attributes/list', [\App\Http\Controllers\AttributesController::class, 'index'])->name('attributes.index');
+    Route::get('/attributes/create', [\App\Http\Controllers\AttributesController::class, 'create'])->name('attributes.create');
+    Route::post('/attributes/store', [\App\Http\Controllers\AttributesController::class, 'store'])->name('attributes.store');
+    Route::get('/attributes/edit/{id}', [\App\Http\Controllers\AttributesController::class, 'edit'])->name('attributes.edit');
+    Route::put('/attributes/update/{id}', [\App\Http\Controllers\AttributesController::class, 'update'])->name('attributes.update');
+    Route::delete('/attributes/delete/{id}', [\App\Http\Controllers\AttributesController::class, 'destroy'])->name('attributes.delete');
+
     Route::get('/measuregroup/list', [\App\Http\Controllers\MeasureGroupController::class, 'index'])->name('measuregroup.index');
     Route::get('/measuregroup/create', [\App\Http\Controllers\MeasureGroupController::class, 'create'])->name('measuregroup.create');
     Route::post('/measuregroup/store', [\App\Http\Controllers\MeasureGroupController::class, 'store'])->name('measuregroup.store');
@@ -74,12 +81,12 @@ Route::middleware([
     Route::put('/feedstock/update/{id}', [\App\Http\Controllers\FeedStockController::class, 'update'])->name('feedstock.update');
     Route::delete('/feedstock/delete/{id}', [\App\Http\Controllers\FeedStockController::class, 'destroy'])->name('feedstock.delete');
 
-    Route::get('/sku/list', [\App\Http\Controllers\SkuColorController::class, 'index'])->name('sku.index');
-    Route::get('/sku/create', [\App\Http\Controllers\SkuColorController::class, 'create'])->name('sku.create');
-    Route::post('/sku/store', [\App\Http\Controllers\SkuColorController::class, 'store'])->name('sku.store');
-    Route::get('/sku/edit/{id}', [\App\Http\Controllers\SkuColorController::class, 'edit'])->name('sku.edit');
-    Route::put('/sku/update/{id}', [\App\Http\Controllers\SkuColorController::class, 'update'])->name('sku.update');
-    Route::delete('/sku/delete/{id}', [\App\Http\Controllers\SkuColorController::class, 'destroy'])->name('sku.delete');
+    Route::get('/skucolor/list', [\App\Http\Controllers\SkuColorController::class, 'index'])->name('skucolor.index');
+    Route::get('/skucolor/create', [\App\Http\Controllers\SkuColorController::class, 'create'])->name('skucolor.create');
+    Route::post('/skucolor/store', [\App\Http\Controllers\SkuColorController::class, 'store'])->name('skucolor.store');
+    Route::get('/skucolor/edit/{id}', [\App\Http\Controllers\SkuColorController::class, 'edit'])->name('skucolor.edit');
+    Route::put('/skucolor/update/{id}', [\App\Http\Controllers\SkuColorController::class, 'update'])->name('skucolor.update');
+    Route::delete('/skucolor/delete/{id}', [\App\Http\Controllers\SkuColorController::class, 'destroy'])->name('skucolor.delete');
 
     Route::get('/field/list', [\App\Http\Controllers\SkuColorController::class, 'index'])->name('field.index');
     Route::get('/field/create', [\App\Http\Controllers\SkuColorController::class, 'create'])->name('field.create');

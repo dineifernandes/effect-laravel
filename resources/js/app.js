@@ -22,6 +22,16 @@ const Toast = Swal.mixin({
    showConfirmButton: false
 });
 
+// const Toast = (timer = 3000) => {
+//     return Swal.mixin({
+//         toast: true,
+//         position: "top-end",
+//         timer: timer !== undefined ? timer : 2000, // Se timer for indefinido, use 2000ms como padrão
+//         timerProgressBar: true,
+//         showConfirmButton: false
+//     });
+// };
+
 window.Toast = Toast;
 
 createInertiaApp({

@@ -1,9 +1,9 @@
 <template>
     <Head :title="$props.title" />
-    <AppLayout title="Acabamento">
+    <AppLayout title="Cor SKU">
         <div class="card">
             <div class="card-body">
-                <h6 class="card-title mb-4">Editar Acabamento</h6>
+                <h6 class="card-title mb-4">Preencha os campos abaixo:</h6>
 
                 <!-- Exibir mensagem de sucesso -->
 
@@ -15,6 +15,13 @@
                         <input v-model="form.nome" type="text" class="form-control" id="nome" name="nome">
                         <!-- Exibir erro -->
                         <div v-if="errors.nome" class="">{{ errors.nome }}</div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Cor Aproximada</label>
+                        <input v-model="form.cor_aproximada" type="color" class="form-control" id="cor_aproximada" name="cor_aproximada">
+                        <!-- Exibir erro -->
+                        <div v-if="errors.cor_aproximada" class="">{{ errors.cor_aproximada }}</div>
                     </div>
 
                     <!-- Campo Status -->
@@ -35,11 +42,11 @@
                     </div>
 
                     <div class="d-flex flex-fill justify-content-end">
-                        <Link :href="route('finishing.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
+                        <Link :href="route('skucolor.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
                             <i class="bi bi-arrow-left me-0"></i>  Voltar
                         </Link>
 
-                        <button class="btn btn-primary me-2" type="submit"><i class="bi bi-pencil"></i> Alterar</button>
+                        <button class="btn btn-primary me-2" type="submit"><i class="bi bi-plus"></i> Salvar</button>
                     </div>
 
                 </form>
@@ -59,11 +66,10 @@ import Notification from "@/Components/Notification.vue";
 
 export default defineComponent({
     props:{
-        acabamento: Object,
         errors: Object,
         title:{
             type: String,
-            default: 'Acabamento'
+            default: 'Cor SKU'
         }
     },
     components: {
@@ -72,9 +78,13 @@ export default defineComponent({
         Link,
         Notification
     },
-    data(props) {
+    data() {
 
-        const form = useForm(props.acabamento)
+        const form = useForm({
+            nome: '',
+            cor_aproximada: '',
+            status: '1',
+        })
 
         return {
             form
@@ -89,14 +99,14 @@ export default defineComponent({
             if (isValid) {
 
                 try{
-                    const response = await this.form.put(route('finishing.update', this.form.id));
+                    const response = await this.form.post(route('skucolor.store'));
 
                     Toast.fire("","Operação realizada com sucesso!","success");
 
                     this.form.reset();
 
                 }catch(err){
-                    Toast.fire("","Falha ao realizar a operação!"+err,"error");
+                    Toast.fire("","Falha ao realizar a operação!","error");
                 }
 
 
@@ -106,7 +116,16 @@ export default defineComponent({
             }
         },
         validateForm(form) {
-          return !(!form.id || form.nome === '' || form.status === '');
+            // Verifique se os campos obrigatórios estão preenchidos e não são apenas espaços em branco
+            const requiredFields = ['nome', 'status','cor_aproximada'];
+            for (const field of requiredFields) {
+                // Verifica se o campo está vazio ou consiste apenas em espaços em branco
+                if (!form[field] || form[field].trim() === '') {
+                    return false;
+                }
+
+            }
+            return true;
         }
     }
 });

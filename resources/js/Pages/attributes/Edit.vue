@@ -1,9 +1,9 @@
 <template>
     <Head :title="$props.title" />
-    <AppLayout title="Acabamento">
+    <AppLayout title="Atributo">
         <div class="card">
             <div class="card-body">
-                <h6 class="card-title mb-4">Editar Acabamento</h6>
+                <h6 class="card-title mb-4">Editar Atributo</h6>
 
                 <!-- Exibir mensagem de sucesso -->
 
@@ -15,6 +15,21 @@
                         <input v-model="form.nome" type="text" class="form-control" id="nome" name="nome">
                         <!-- Exibir erro -->
                         <div v-if="errors.nome" class="">{{ errors.nome }}</div>
+                    </div>
+
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label">Vantagem</label>
+                        <input v-model="form.vantagem" type="text" class="form-control" id="vantagem" name="vantagem">
+                        <!-- Exibir erro -->
+                        <div v-if="errors.vantagem" class="">{{ errors.vantagem }}</div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Nota</label>
+                        <input v-model="form.nota" type="number" step="any" class="form-control" id="nota" name="nota">
+                        <!-- Exibir erro -->
+                        <div v-if="errors.nota" class="">{{ errors.nota }}</div>
                     </div>
 
                     <!-- Campo Status -->
@@ -35,7 +50,7 @@
                     </div>
 
                     <div class="d-flex flex-fill justify-content-end">
-                        <Link :href="route('finishing.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
+                        <Link :href="route('attributes.index')" class="btn btn-outline-dark btn-icon me-2" data-bs-toggle="tooltip" title="Cancelar">
                             <i class="bi bi-arrow-left me-0"></i>  Voltar
                         </Link>
 
@@ -59,11 +74,11 @@ import Notification from "@/Components/Notification.vue";
 
 export default defineComponent({
     props:{
-        acabamento: Object,
+        atributo: Object,
         errors: Object,
         title:{
             type: String,
-            default: 'Acabamento'
+            default: 'Atributos'
         }
     },
     components: {
@@ -74,7 +89,7 @@ export default defineComponent({
     },
     data(props) {
 
-        const form = useForm(props.acabamento)
+        const form = useForm(props.atributo)
 
         return {
             form
@@ -89,7 +104,7 @@ export default defineComponent({
             if (isValid) {
 
                 try{
-                    const response = await this.form.put(route('finishing.update', this.form.id));
+                    const response = await this.form.put(route('attributes.update', this.form.id));
 
                     Toast.fire("","Operação realizada com sucesso!","success");
 

@@ -1,4 +1,5 @@
 <template>
+    <Head :title="$props.title" />
     <AppLayout title="Polegada">
         <div class="card">
             <div class="card-body">
@@ -51,7 +52,7 @@
 <script>
 import AppLayout from "../AppLayout.vue";
 import { defineComponent } from "vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import {Head, Link, useForm} from "@inertiajs/vue3";
 import Swal from 'sweetalert2'
 
 import Notification from "@/Components/Notification.vue";
@@ -59,8 +60,13 @@ import Notification from "@/Components/Notification.vue";
 export default defineComponent({
     props:{
         errors: Object,
+        title:{
+            type: String,
+            default: 'Polegada'
+        }
     },
     components: {
+        Head,
         AppLayout,
         Link,
         Notification
