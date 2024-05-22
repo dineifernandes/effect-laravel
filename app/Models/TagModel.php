@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class CompanyModel
+ * Class AcabamentosModel
  *
  * @property int $id
  * @property string nome
@@ -21,38 +21,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $data_update
  * @package App\Models
  */
-class CompanyModel extends Model
+class TagModel extends Model
 {
-    protected $table = 'empresas';
+    protected $table = 'etiquetas';
     public $timestamps = false;
 
     protected $casts = [
         'status' => 'int',
-        'quantidade_funcionarios' => 'int',
-        'area_construida' => 'double',
-        'data_fundacao' => 'date',
+        'duracao_etiqueta' => 'int',
         'data_cadastro' => 'datetime',
         'data_update' => 'datetime'
     ];
 
     protected $fillable = [
         'nome',
-        'razao_social',
-        'logo',
-        'slogan',
-        'area_construida',
-        'data_fundacao',
-        'quantidade_funcionarios',
-        'video_institucional',
-        'data_cadastro',
-        'data_update',
         'status',
+        'duracao_etiqueta',
+        'data_cadastro',
+        'data_update'
     ];
-
-    public function photos()
-    {
-        return $this->hasMany(FotosEmpresaModel::class, 'empresa_id');
-    }
 
 //    public function usuario()
 //    {

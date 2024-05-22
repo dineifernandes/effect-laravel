@@ -7,8 +7,7 @@
 
                 <!-- Exibir mensagem de sucesso -->
 
-
-                <form class="row" method="post" @submit.prevent="submitForm">
+                <form class="row" method="post" @submit.prevent="submitForm" enctype="multipart/form-data">
                     <!-- Campo Nome -->
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Nome</label>
@@ -23,7 +22,6 @@
                         <!-- Exibir erro -->
                         <div v-if="errors.razao_social" class="">{{ errors.razao_social }}</div>
                     </div>
-
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Logo</label>
@@ -40,55 +38,37 @@
                     </div>
 
                     <div class="col-md-12 mb-3">
-                        <label class="form-label">História</label>
-                        <textarea v-model="form.historia" rows="5" class="form-control" id="historia" name="historia"></textarea>
-                        <!-- Exibir erro -->
-                        <div v-if="errors.historia" class="">{{ errors.historia }}</div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Propósito</label>
-                        <textarea v-model="form.proposito" rows="5" class="form-control" id="proposito" name="proposito"></textarea>
-                        <!-- Exibir erro -->
-                        <div v-if="errors.proposito" class="">{{ errors.proposito }}</div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Missão</label>
-                        <textarea v-model="form.missao" rows="5" class="form-control" id="missao" name="missao"></textarea>
-                        <!-- Exibir erro -->
-                        <div v-if="errors.missao" class="">{{ errors.missao }}</div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Visão</label>
-                        <textarea v-model="form.visao" rows="5" class="form-control" id="visao" name="visao"></textarea>
-                        <!-- Exibir erro -->
-                        <div v-if="errors.visao" class="">{{ errors.visao }}</div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Valores</label>
-                        <textarea v-model="form.valores" rows="5" class="form-control" id="valores" name="valores"></textarea>
-                        <!-- Exibir erro -->
-                        <div v-if="errors.valores" class="">{{ errors.valores }}</div>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
                         <label class="form-label">Link Vídeo Institucional</label>
                         <input v-model="form.video_institucional" type="text" class="form-control" id="video_institucional" name="video_institucional">
                         <!-- Exibir erro -->
                         <div v-if="errors.video_institucional" class="">{{ errors.video_institucional }}</div>
                     </div>
 
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Área</label>
+                        <input v-model="form.area_construida" type="number" step="any" class="form-control" id="area_construida" name="area_construida">
+                        <!-- Exibir erro -->
+                        <div v-if="errors.area_construida" class="">{{ errors.area_construida }}</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Fundação</label>
+                        <input v-model="form.data_fundacao" type="date" class="form-control" id="data_fundacao" name="data_fundacao">
+                        <!-- Exibir erro -->
+                        <div v-if="errors.data_fundacao" class="">{{ errors.data_fundacao }}</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Total Funcionários</label>
+                        <input v-model="form.quantidade_funcionarios" type="number" class="form-control" id="quantidade_funcionarios" name="quantidade_funcionarios">
+                        <!-- Exibir erro -->
+                        <div v-if="errors.quantidade_funcionarios" class="">{{ errors.quantidade_funcionarios }}</div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12">
                             <label for="">Fotos da Empresa</label>
-                            <div id="drop-area" class="drop-area" @dragover.prevent="dragOver" @dragleave="dragLeave" @drop="dropFile">
-                                <label for="fileInput"><p>Clique ou arraste e solte as imagens aqui</p></label>
-                                <div ref="imagePreview"></div>
-                            </div>
-                            <input type="file" id="fileInput" name="fotos[]" multiple style="display: none;" accept="image/jpeg, image/png" @change="handleFileChange">
+                            <Image @files-updated="updateFiles"/>
                         </div>
                     </div>
 
@@ -118,7 +98,6 @@
                     </div>
 
                 </form>
-
             </div>
         </div>
     </AppLayout>
@@ -128,15 +107,16 @@
 import '../../../css/style_images_company.css';
 import AppLayout from "../AppLayout.vue";
 import { defineComponent } from "vue";
-import {Head, Link, useForm} from "@inertiajs/vue3";
-import Swal from 'sweetalert2'
+import { Head, Link, useForm } from "@inertiajs/vue3";
+import Swal from 'sweetalert2';
 
 import Notification from "@/Components/Notification.vue";
+import Image from "@/Components/Image.vue";
 
 export default defineComponent({
-    props:{
+    props: {
         errors: Object,
-        title:{
+        title: {
             type: String,
             default: 'Empresa'
         }
@@ -145,51 +125,63 @@ export default defineComponent({
         Head,
         AppLayout,
         Link,
-        Notification
+        Notification,
+        Image
     },
     data() {
-
         const form = useForm({
             nome: '',
             razao_social: '',
             logo: '',
             slogan: '',
-            historia: '',
-            proposito: '',
-            missao: '',
-            visao: '',
-            valores: '',
             video_institucional: '',
             status: '1',
-        })
+            area_construida: '',
+            data_fundacao: '',
+            quantidade_funcionarios: '',
+            fotos: []
+        });
 
         return {
             form
-        }
+        };
     },
     methods: {
-        async submitForm(){
+        async submitForm() {
             // Execute a validação antes de enviar
             const isValid = this.validateForm(this.form);
-
             // Se o formulário for válido, faça a submissão
             if (isValid.trim().length <= 0) {
+                try {
+                    const formData = new FormData();
+                    Object.keys(this.form).forEach(key => {
+                        if (Array.isArray(this.form[key])) {
+                            this.form[key].forEach((item, index) => {
+                                formData.append(`${key}[${index}]`, item);
+                            });
+                        } else {
+                            formData.append(key, this.form[key]);
+                        }
+                    });
 
-                try{
-                    const response = await this.form.post(route('company.store'));
+                    const response = await this.form.post(route('company.store'), {
+                        onUploadProgress: function (progressEvent) {
+                            // Opcional: Adicionar lógica de progresso do upload
+                        },
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
 
-                    Toast.fire("","Operação realizada com sucesso!","success");
+                    Toast.fire("", "Operação realizada com sucesso!", "success");
 
-                    //this.form.reset();
-
-                }catch(err){
-                    Toast.fire("","Falha ao realizar a operação!","error");
+                    this.form.reset();
+                    this.form.fotos = [];
+                } catch (err) {
+                    Toast.fire("", "Falha ao realizar a operação!", "error");
                 }
-
-
             } else {
-                Toast.fire("",isValid,"error");
-
+                Toast.fire("", isValid, "error");
             }
         },
         validateForm(form) {
@@ -197,33 +189,26 @@ export default defineComponent({
             const requiredFields = ['nome', 'status'];
             let erros = "";
 
-            if(!form['nome'] || form['nome'].trim() === ''){
+            if (!form['nome'] || form['nome'].trim() === '') {
                 erros += "O campo nome é obrigatório!<br>";
             }
-            if(!form['razao_social'] || form['razao_social'].trim() === ''){
+            if (!form['razao_social'] || form['razao_social'].trim() === '') {
                 erros += "O campo razao_social é obrigatório!<br>";
             }
-            if(!form['logo']){
+            if (!form['logo']) {
                 erros += "O campo logo é obrigatório!<br>";
             }
-            if(!form['slogan'] || form['slogan'].trim() === ''){
+            if (!form['slogan'] || form['slogan'].trim() === '') {
                 erros += "O campo slogan é obrigatório!<br>";
             }
-            if(!form['historia'] || form['historia'].trim() === ''){
-                erros += "O campo historia é obrigatório!<br>";
+            if (!form['data_fundacao'] || form['data_fundacao'].trim() === '') {
+                erros += "O campo data de fundação é obrigatório!<br>";
             }
-
-            if(!form['proposito'] || form['proposito'].trim() === ''){
-                erros += "O campo proposito é obrigatório!<br>";
+            if (isNaN(parseFloat(form['area_construida'])) || parseFloat(form['area_construida']) < 0) {
+                erros += "O campo área construida deve preenchido e não negativo!<br>";
             }
-            if(!form['missao'] || form['missao'].trim() === ''){
-                erros += "O campo missao é obrigatório!<br>";
-            }
-            if(!form['visao'] || form['visao'].trim() === ''){
-                erros += "O campo visao é obrigatório!<br>";
-            }
-            if(!form['valores'] || form['valores'].trim() === ''){
-                erros += "O campo valores é obrigatório!<br>";
+            if (isNaN(parseInt(form['quantidade_funcionarios'])) || parseInt(form['quantidade_funcionarios']) < 0) {
+                erros += "O campo quantidade de funcionários deve preenchido e não negativo!<br>";
             }
 
             return erros;
@@ -232,77 +217,12 @@ export default defineComponent({
             const files = event.target.files;
             this.handleFiles(files);
         },
-        dragOver(event) {
-            event.preventDefault();
-            event.target.classList.add('active');
-        },
-        dragLeave(event) {
-            event.target.classList.remove('active');
-        },
-        dropFile(event) {
-            event.preventDefault();
-            event.target.classList.remove('active');
-            const files = event.dataTransfer.files;
-            this.handleFiles(files);
-        },
-        handleFiles(files) {
-            const imagePreview = this.$refs.imagePreview;
-            if (!imagePreview || !(imagePreview instanceof HTMLElement)) {
-                console.error("Elemento imagePreview não encontrado ou não é um elemento HTML.");
-                return;
-            }
-
-            for (const file of files) {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => {
-                        const image = new Image();
-                        image.src = reader.result;
-                        image.classList.add('preview-image');
-
-                        const closeButton = document.createElement('a');
-                        closeButton.innerHTML = '<i class="bi bi-x"></i>';
-                        closeButton.classList.add('remove-button');
-                        closeButton.addEventListener('click', () => {
-                            // Remova o contêiner de imagem quando o botão de fechar for clicado
-                            imageContainer.parentNode.removeChild(imageContainer);
-                            // Remova o arquivo associado
-                            const index = Array.from(imagePreview.children).indexOf(imageContainer);
-                            const fileInput = this.$refs.fileInput;
-                            const files = fileInput.files;
-                            const newFiles = Array.from(files).filter((_, idx) => idx !== index);
-                            fileInput.files = newFiles;
-                        });
-
-                        const imageContainer = document.createElement('div');
-                        imageContainer.classList.add('image-container');
-                        imageContainer.appendChild(image);
-                        imageContainer.appendChild(closeButton);
-
-                        imagePreview.appendChild(imageContainer);
-                    };
-                }
-            }
-        },
         onFileChange(event) {
             this.form.logo = event.target.files[0];
+        },
+        updateFiles(files) {
+            this.form.fotos = files;
         }
-
     }
 });
 </script>
-
-<style>
-.error {
-    color: red;
-}
-
-.success-message {
-    color: green;
-}
-
-.error-message {
-    color: red;
-}
-</style>

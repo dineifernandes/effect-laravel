@@ -16,6 +16,7 @@ class AttributesController extends Controller
     public function index()
     {
 
+
         request()->validate([
             'sortDir' => ['nullable', 'in:asc,desc'],
             'sort' => ['nullable', 'in:id,nome,data_cadastro,data_update,status,vantagem, nota'],
