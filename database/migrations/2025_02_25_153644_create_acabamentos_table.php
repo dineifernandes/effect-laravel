@@ -7,19 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('etiquetas', function (Blueprint $table) {
+        Schema::create('acabamentos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->dateTime('duracao_etiqueta');
-            $table->dateTime('data_cadastro');
-            $table->dateTime('data_update');
-            $table->integer('status');
-            $table->timestamps();
+            $table->integer('status')->default(1);
+            $table->timestamp('data_cadastro')->useCurrent();
+            $table->timestamp('data_update')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('etiquetas');
+        Schema::dropIfExists('acabamentos');
     }
 };
